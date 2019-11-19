@@ -2,11 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
+const dotenv = require("dotenv"); dotenv.config();
 const port = process.env.PORT || 8080;
-const dotenv = require("dotenv").config();
+
 const Mongo = require('mongodb').MongoClient;
 const url = process.env.MONGODB_URI;
-const mongoClient = new Mongo("url");
+const mongoClient = new Mongo(url);
 
 mongoClient.connect((err) => {
   console.log(err);
