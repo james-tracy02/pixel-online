@@ -28,7 +28,7 @@ function getAllPixels(req, res) {
   const db = mongoClient.db();
   const pixels = db.collection('pixels');
 
-  pixels.find()
+  pixels.find().toArray()
   .then((pixels) => res.send(pixels));
 }
 
@@ -46,8 +46,10 @@ function colorPixel(req, res) {
   .then((pixel) => {
     if(!pixel) {
       pixels.insertOne(newPixel);
+      res.send("ok");
     } else {
       pixels.replaceOne({ _id: pixel._id }, newPixel);
+      res.send("ok");
     }
   });
 }
