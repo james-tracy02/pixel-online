@@ -3,18 +3,17 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 8080;
+const dotenv = require("dotenv").config();
 const Mongo = require('mongodb').MongoClient;
 const url = process.env.MONGODB_URI;
-const mongoClient = new Mongo(url);
+const mongoClient = new Mongo("url");
 
 mongoClient.connect((err) => {
+  console.log(err);
   if(!err) {
     console.log('connected to mongo');
   }
 });
-
-const db = mongoClient.db();
-const pixels = db.collection('pixels');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -25,11 +24,17 @@ app.post('/pixels/:x/:y', (req, res) => colorPixel(req, res));
 app.listen(port);
 
 function getAllPixels(req, res) {
+  const db = mongoClient.db();
+  const pixels = db.collection('pixels');
+
   pixels.find()
   .then((pixels) => res.send(pixels));
 }
 
 function colorPixel(req, res) {
+  const db = mongoClient.db();
+  const pixels = db.collection('pixels');
+
   const newPixel = {
     x: req.params.x,
     y: req.params.y,
