@@ -25,15 +25,23 @@ app.post('/pixels/:x/:y', (req, res) => colorPixel(req, res));
 app.listen(port);
 
 function getAllPixels(req, res) {
-  //retrieve from database
-  // .then
-  //res.send(result);
+  pixels.find()
+  .then((pixels) => res.send(pixels));
 }
 
 function colorPixel(req, res) {
-  const x = req.params.x;
-  const y = req.params.y;
-  const color = req.body.color;
+  const newPixel = {
+    x: req.params.x,
+    y: req.params.y,
+    color: req.body.color,
+  };
 
-  // write to database
+  pixels.findOne({ x: newPixel.x, y: newPixel.y })
+  .then((pixel) => {
+    if(!pixel) {
+      pixels.insertOne(newPixel);
+    } else {
+      pixels.replaceOne({ _id: pixel._id }, newPixel);
+    }
+  });
 }
