@@ -6,16 +6,22 @@ function getAllPixels() {
   return Pixel.find();
 }
 
-async function colorPixel(x, y, color) {
+async function savePixels(pixels) {
+  pixels.forEach((pixel) => {
+    await savePixel(pixel);
+  });
+}
+
+async function savePixel(newPixel) {
   const pixel = await Pixel.findOne({ x, y });
   if (!pixel) {
-    return new Pixel({ x, y, color }).save();
+    return new Pixel({ newPixel.x, newPixel.y, newPixel.color }).save();
   }
-  pixel.color = color;
+  pixel.color = newPixel.color;
   return pixel.save();
 }
 
 module.exports = {
   getAllPixels,
-  colorPixel,
+  savePixels,
 }

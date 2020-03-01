@@ -15,9 +15,9 @@ app.get('/pixels', async (req, res) => {
   res.send(pixels);
 });
 
-app.post('/pixels/:x/:y', async (req, res) => {
-  const pixel = await pixelsService.colorPixel(req.params.x, req.params.y, req.body.color);
-  res.send(pixel);
+app.post('/pixels', async (req, res) => {
+  await pixelsService.colorPixel(req.body.pixels);
+  res.send('ok');
 });
 
 app.listen(port);
