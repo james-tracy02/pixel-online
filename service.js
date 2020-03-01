@@ -13,9 +13,9 @@ async function savePixels(pixels) {
 }
 
 async function savePixel(newPixel) {
-  const pixel = await Pixel.findOne({ x, y });
+  const pixel = await Pixel.findOne({ x: newPixel.x, y: newPixel.y });
   if (!pixel) {
-    return new Pixel({ x: newPixel.x, y: newPixel.y, xolor: newPixel.color }).save();
+    return new Pixel({ x: newPixel.x, y: newPixel.y, color: newPixel.color }).save();
   }
   pixel.color = newPixel.color;
   return pixel.save();
