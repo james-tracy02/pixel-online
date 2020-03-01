@@ -16,7 +16,7 @@ app.get('/pixels', async (req, res) => {
 });
 
 app.post('/pixels', async (req, res) => {
-  await pixelsService.colorPixel(req.body.pixels);
+  await pixelsService.savePixels(req.body.pixels);
   res.send('ok');
 });
 
