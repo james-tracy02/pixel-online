@@ -7,15 +7,15 @@ function getAllPixels() {
 }
 
 async function savePixels(pixels) {
-  pixels.forEach((pixel) => {
+  for(let i = 0; i < pixels.length; i++) {
     await savePixel(pixel);
-  });
+  }
 }
 
 async function savePixel(newPixel) {
   const pixel = await Pixel.findOne({ x, y });
   if (!pixel) {
-    return new Pixel({ newPixel.x, newPixel.y, newPixel.color }).save();
+    return new Pixel({ x: newPixel.x, y: newPixel.y, xolor: newPixel.color }).save();
   }
   pixel.color = newPixel.color;
   return pixel.save();
