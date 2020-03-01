@@ -7,9 +7,7 @@ function getAllPixels() {
 }
 
 async function savePixels(pixels) {
-  for(let i = 0; i < pixels.length; i++) {
-    await savePixel(pixels[i]);
-  }
+  await Pixel.insertMany(pixels);
 }
 
 async function savePixel(newPixel) {

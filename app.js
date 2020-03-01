@@ -16,8 +16,13 @@ app.get('/pixels', async (req, res) => {
 });
 
 app.post('/pixels', async (req, res) => {
-  await pixelsService.savePixels(req.body.pixels);
-  res.send('ok');
+  try {
+    await pixelsService.savePixels(req.body.pixels);
+    res.send('ok');
+  }
+  catch (err) {
+    res.send('err');
+  }
 });
 
 app.listen(port);
