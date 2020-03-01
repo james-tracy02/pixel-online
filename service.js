@@ -6,17 +6,21 @@ function getAllPixels() {
   return Pixel.find();
 }
 
-async function savePixels(pixels) {
-  await Pixel.insertMany(pixels);
-}
-
-async function savePixel(newPixel) {
-  const pixel = await Pixel.findOne({ x: newPixel.x, y: newPixel.y });
-  if (!pixel) {
-    return new Pixel({ x: newPixel.x, y: newPixel.y, color: newPixel.color }).save();
+function savePixels(pixels) {
+  const bulkOps = [];
+  for(let i = 0; i < pixels.length; i += 1) {
+    const pixel = pixels[i];
+    bulkOps.push(
+      { updateOne:
+        {
+          filter: { x: pixel.x, y: pixel.y },
+          update: pixel,
+          upsert: true,
+        }
+      });
   }
-  pixel.color = newPixel.color;
-  return pixel.save();
+
+  return Pixel.collection.bulkWrite(bulkOps);
 }
 
 module.exports = {
