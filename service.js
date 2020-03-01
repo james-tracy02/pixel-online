@@ -8,7 +8,7 @@ function getAllPixels() {
 
 async function savePixels(pixels) {
   for(let i = 0; i < pixels.length; i++) {
-    await savePixel(pixel);
+    await savePixel(pixels[i]);
   }
 }
 
