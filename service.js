@@ -12,7 +12,7 @@ async function savePixels(pixels) {
     const pixel = pixels[i];
     if(pixel.color === '#ffffff' || pixel.color === '#FFFFFF') {
       bulkOps.push(
-        { delteOne:
+        { deleteOne:
            { filter: { x: pixel.x, y: pixel.y } }
         });
     } else {
