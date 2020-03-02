@@ -14,7 +14,7 @@ let memPixels = [];
 let hasLoaded = false;
 
 app.get('/pixels', async (req, res) => {
-  if(!hadLoaded) {
+  if(!hasLoaded) {
     hasLoaded = true;
     memPixels = await pixelsService.getAllPixels();
   }
