@@ -23,10 +23,10 @@ app.get('/pixels', async (req, res) => {
 });
 
 app.post('/pixels', (req, res) => {
-  addPixelsToMem(req.body.pixels);
   res.send(getPixelsFromMem());
+  addPixelsToMem(req.body.pixels);
   if(req.body.pixels.length > 0)
-  pixelsService.savePixels(req.body.pixels);
+    pixelsService.savePixels(req.body.pixels);
 });
 
 app.listen(port);
