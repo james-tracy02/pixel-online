@@ -10,21 +10,34 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.json({limit: '1mb'}));
 
-let memPixels = [];
+let memPixels = new Map();
 let hasLoaded = false;
 
 app.get('/pixels', async (req, res) => {
   if(!hasLoaded) {
     hasLoaded = true;
-    memPixels = await pixelsService.getAllPixels();
+    const pixels = await pixelsService.getAllPixels();
+    addPixelsToMem(pixels);
   }
-  res.send(memPixels);
+  res.send(getPixelsFromMem());
 });
 
 app.post('/pixels', (req, res) => {
-  memPixels = memPixels.concat(req.body.pixels);
-  res.send(memPixels);
+  addPixelsToMem(pixels);
+  res.send(getPixelsFromMem());
   pixelsService.savePixels(req.body.pixels);
 });
 
 app.listen(port);
+
+function addPixelsToMem(pixels) {
+  let i;
+  for(i = 0; i < pixels.length; i += 1) {
+    const pixel = pixels[i];
+    memPixels.set({x: pixel.x, y: pixel.y}, pixel);
+  }
+}
+
+function getPixelsFromMem() {
+  return Array.from(memPixels);
+}
