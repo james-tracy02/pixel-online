@@ -23,7 +23,7 @@ app.get('/pixels', async (req, res) => {
 });
 
 app.post('/pixels', (req, res) => {
-  addPixelsToMem(pixels);
+  addPixelsToMem(req.body.pixels);
   res.send(getPixelsFromMem());
   pixelsService.savePixels(req.body.pixels);
 });
