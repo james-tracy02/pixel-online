@@ -40,5 +40,5 @@ function addPixelsToMem(pixels) {
 }
 
 function getPixelsFromMem() {
-  return Array.from(memPixels);
+  return Array.from(memPixels, (item) => item[1]);
 }
