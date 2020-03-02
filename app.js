@@ -10,19 +10,21 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.json({limit: '1mb'}));
 
-app.get('/pixels', async (req, res) => {
+const memPixels = [];
+
+app.get('/pixels/persisted', async (req, res) => {
   const pixels = await pixelsService.getAllPixels();
-  res.send(pixels);
+  res.send(pixels.concat(memPixels));
 });
 
-app.post('/pixels', async (req, res) => {
-  try {
-    await pixelsService.savePixels(req.body.pixels);
-    res.send('ok');
-  }
-  catch (err) {
-    res.send('err');
-  }
+app.get('/pixels', (req, res) => {
+  res.send(memPixels);
+});
+
+app.post('/pixels', (req, res) => {
+  memPixels.concat(req.body.pixels);
+  res.send(memPixels);
+  pixelsService.savePixels(req.body.pixels);
 });
 
 app.listen(port);
