@@ -10,6 +10,12 @@ async function savePixels(pixels) {
   const bulkOps = [];
   for(let i = 0; i < pixels.length; i += 1) {
     const pixel = pixels[i];
+    if(pixel.color === '#ffffff' || pixel.color === '#FFFFFF') {
+      bulkOps.push(
+        { delteOne:
+           { filter: { x: pixel.x, y: pixel.y } }
+        });
+    } else {
     bulkOps.push(
       { updateOne:
         {
@@ -18,6 +24,7 @@ async function savePixels(pixels) {
           upsert: true,
         }
       });
+    }
   }
 
   Pixel.collection.bulkWrite(bulkOps);
