@@ -7,7 +7,7 @@ const pixelsService = require('./service.js');
 const app = express();
 const port = process.env.PORT || 8080;
 
-app.use(cors());
+//app.use(cors());
 app.use(bodyParser.json({limit: '1mb'}));
 
 let memPixels = new Map();
@@ -23,6 +23,7 @@ app.get('/pixels', async (req, res) => {
 });
 
 app.post('/pixels', (req, res) => {
+  console.log(req.body.pixels.length);
   res.send(getPixelsFromMem());
   addPixelsToMem(req.body.pixels);
   if(req.body.pixels.length > 0)
