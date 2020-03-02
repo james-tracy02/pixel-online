@@ -6,7 +6,7 @@ function getAllPixels() {
   return Pixel.find();
 }
 
-function savePixels(pixels) {
+async function savePixels(pixels) {
   const bulkOps = [];
   for(let i = 0; i < pixels.length; i += 1) {
     const pixel = pixels[i];
@@ -20,7 +20,7 @@ function savePixels(pixels) {
       });
   }
 
-  return Pixel.collection.bulkWrite(bulkOps);
+  Pixel.collection.bulkWrite(bulkOps);
 }
 
 module.exports = {
