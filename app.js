@@ -11,14 +11,13 @@ app.use(cors());
 app.use(bodyParser.json({limit: '1mb'}));
 
 let memPixels = [];
+let hasLoaded = false;
 
-app.get('/pixels/persisted', async (req, res) => {
-  const pixels = await pixelsService.getAllPixels();
-  memPixels = memPixels.concat(pixels);
-  res.send(memPixels);
-});
-
-app.get('/pixels', (req, res) => {
+app.get('/pixels', async (req, res) => {
+  if(!hadLoaded) {
+    hasLoaded = true;
+    memPixels = await pixelsService.getAllPixels();
+  }
   res.send(memPixels);
 });
 
