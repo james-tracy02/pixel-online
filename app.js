@@ -15,11 +15,12 @@ const memPixels = [];
 
 app.get('/pixels/persisted', async (req, res) => {
   const pixels = await pixelsService.getAllPixels();
-  res.send(pixels.concat(memPixels));
+  res.send(memPixels.concat(pixels));
 });
 
 app.get('/pixels', (req, res) => {
   res.send(memPixels);
+  console.log(memPixels);
 });
 
 app.post('/pixels', (req, res) => {
