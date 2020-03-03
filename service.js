@@ -3,7 +3,7 @@ require('./database.js');
 const Pixel = require('./pixel.js');
 
 function getAllPixels() {
-  return Pixel.find();
+  return Pixel.find({},{_id:0});
 }
 
 async function savePixels(pixels) {

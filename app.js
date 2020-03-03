@@ -8,22 +8,16 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 app.use(cors());
-app.use(bodyParser.json({limit: '1mb'}));
+app.use(bodyParser.json({limit: '5mb'}));
 
-let memPixels = new Map();
-let hasLoaded = false;
+let memPixels = [];
 
 app.get('/pixels', async (req, res) => {
-  if(!hasLoaded) {
-    hasLoaded = true;
-    const pixels = await pixelsService.getAllPixels();
-    addPixelsToMem(pixels);
-  }
-  res.send(getPixelsFromMem());
+  res.send(memPixels);
 });
 
 app.post('/pixels', (req, res) => {
-  res.send(getPixelsFromMem());
+  res.send(memPixels);
   addPixelsToMem(req.body.pixels);
   if(req.body.pixels.length > 0)
     pixelsService.savePixels(req.body.pixels);
@@ -35,18 +29,17 @@ app.get('/ping', (req, res) => {
 
 app.listen(port);
 
+async function loadPixelsToMem() {
+  const pixels = await pixelsService.getAllPixels();
+  memPixels = pixels;
+}
+
 function addPixelsToMem(pixels) {
   let i;
   for(i = 0; i < pixels.length; i += 1) {
-    const pixel = pixels[i];
-    if(pixel.color === '#ffffff' || pixel.color === '#FFFFFF') {
-      memPixels.delete(`x${pixel.x}y${pixel.y}`);
-    } else {
-      memPixels.set(`x${pixel.x}y${pixel.y}`, pixel);
-    }
+    memPixels.push(pixels[i]);
   }
 }
 
-function getPixelsFromMem() {
-  return Array.from(memPixels, (item) => item[1]);
-}
+loadPixelsToMem();
+setInterval(loadPixelsToMem, 60000);
