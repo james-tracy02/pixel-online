@@ -32,6 +32,7 @@ app.post('/pixels', (req, res) => {
 app.listen(port);
 
 function addPixelsToMem(pixels) {
+  console.log(Array.from(memPixels));
   let i;
   for(i = 0; i < pixels.length; i += 1) {
     const pixel = pixels[i];
