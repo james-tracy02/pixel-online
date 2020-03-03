@@ -23,7 +23,10 @@ app.post('/pixels', (req, res) => {
   count += req.body.pixels.length;
   addPixelsToMem(req.body.pixels);
   if(req.body.pixels.length > 0) pixelsService.savePixels(req.body.pixels);
-  if(count > refresh) loadPixelsToMem();
+  if(count > refresh) {
+    count = 0;
+    loadPixelsToMem();
+  }
 });
 
 app.get('/ping', (req, res) => {
