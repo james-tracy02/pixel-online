@@ -17,8 +17,8 @@ app.get('/pixels', async (req, res) => {
 });
 
 app.post('/pixels', (req, res) => {
-  addPixelsToMem(req.body.pixels);
   res.send(memPixels);
+  addPixelsToMem(req.body.pixels);
   if(req.body.pixels.length > 0)
     pixelsService.savePixels(req.body.pixels);
 });
@@ -42,4 +42,4 @@ function addPixelsToMem(pixels) {
 }
 
 loadPixelsToMem();
-setInterval(loadPixelsToMem, 300000);
+setInterval(loadPixelsToMem, 600000);
