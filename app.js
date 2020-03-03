@@ -17,8 +17,8 @@ app.get('/pixels', async (req, res) => {
 });
 
 app.post('/pixels', (req, res) => {
-  res.send(memPixels);
   addPixelsToMem(req.body.pixels);
+  res.send(memPixels);
   if(req.body.pixels.length > 0)
     pixelsService.savePixels(req.body.pixels);
 });
