@@ -13,7 +13,7 @@ app.use(bodyParser.json({limit: '5mb'}));
 let basePixels = [];
 let memPixels = [];
 let count = 0;
-const refresh = 2000;
+const refresh = 5000;
 
 app.get('/pixels', async (req, res) => {
   res.send(basePixels.concat(memPixels));
