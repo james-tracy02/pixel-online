@@ -13,21 +13,23 @@ app.use(bodyParser.json({limit: '5mb'}));
 let basePixels = [];
 let memPixels = [];
 let count = 0;
-const refresh = 2000;
+const refresh = 5000;
 
 app.get('/pixels', async (req, res) => {
-  res.send(basePixels);
+  res.send(basePixels.concat(memPixels));
 });
 
 app.post('/pixels', (req, res) => {
-  res.send(memPixels);
+  if(count > refresh) {
+    count = 0;
+    sendMemToBase();
+    res.send('refresh');
+  } else {
+    res.send(memPixels);
+  }
   count += req.body.pixels.length;
   addPixelsToMem(req.body.pixels);
   if(req.body.pixels.length > 0) pixelsService.savePixels(req.body.pixels);
-  if(count > refresh) {
-    count = 0;
-    loadPixelsToMem();
-  }
 });
 
 app.get('/ping', (req, res) => {
@@ -39,6 +41,14 @@ app.listen(port);
 async function loadPixelsToMem() {
   const pixels = await pixelsService.getAllPixels();
   basePixels = pixels;
+  memPixels = [];
+}
+
+function sendMemToBase() {
+  let i;
+  for(i = 0; i < memPixels.length; i += 1) {
+    basePixels.push(memPixels[i]);
+  }
   memPixels = [];
 }
 
