@@ -36,9 +36,9 @@ function addPixelsToMem(pixels) {
   for(i = 0; i < pixels.length; i += 1) {
     const pixel = pixels[i];
     if(pixel.color === '#ffffff' || pixel.color === '#FFFFFF') {
-      console.log(memPixels.delete({x: pixel.x, y: pixel.y}));
+      memPixels.delete(`x${pixel.x}y${pixel.y}`);
     } else {
-      memPixels.set({x: pixel.x, y: pixel.y}, pixel);
+      memPixels.set(`x${pixel.x}y${pixel.y}`, pixel);
     }
   }
 }
