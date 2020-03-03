@@ -49,17 +49,4 @@ function addPixelsToMem(pixels) {
   }
 }
 
-function getIndex(x, y) {
-  return x * 1080 + y;
-}
-
-function hexToRGB(hex) {
-  const decimal = parseInt(hex.substring(1), 10);
-  return {
-    r: decimal & 110000,
-    g: decimal & 001100,
-    b: decimal & 000011,
-  };
-}
-
 loadPixelsToMem();
