@@ -29,6 +29,10 @@ app.post('/pixels', (req, res) => {
     pixelsService.savePixels(req.body.pixels);
 });
 
+app.get('/ping', (req, res) => {
+  res.sed(ok);
+});
+
 app.listen(port);
 
 function addPixelsToMem(pixels) {
