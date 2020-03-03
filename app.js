@@ -30,7 +30,7 @@ app.post('/pixels', (req, res) => {
 });
 
 app.get('/ping', (req, res) => {
-  res.sed('ok');
+  res.send('ok');
 });
 
 app.listen(port);
