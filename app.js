@@ -10,12 +10,13 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.json({limit: '5mb'}));
 
+let basePixels = [];
 let memPixels = [];
 let count = 0;
 const refresh = 2000;
 
 app.get('/pixels', async (req, res) => {
-  res.send(memPixels);
+  res.send(basePixels);
 });
 
 app.post('/pixels', (req, res) => {
@@ -37,7 +38,8 @@ app.listen(port);
 
 async function loadPixelsToMem() {
   const pixels = await pixelsService.getAllPixels();
-  memPixels = pixels;
+  basePixels = pixels;
+  memPixels = [];
 }
 
 function addPixelsToMem(pixels) {
