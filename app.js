@@ -13,23 +13,21 @@ app.use(bodyParser.json({limit: '5mb'}));
 let basePixels = [];
 let memPixels = [];
 let count = 0;
-const refresh = 5000;
+const refresh = 2000;
 
 app.get('/pixels', async (req, res) => {
   res.send(basePixels.concat(memPixels));
 });
 
 app.post('/pixels', (req, res) => {
-  if(count > refresh) {
-    count = 0;
-    sendMemToBase();
-    res.send('refresh');
-  } else {
-    res.send(memPixels);
-  }
+  res.send(memPixels);
   count += req.body.pixels.length;
   addPixelsToMem(req.body.pixels);
   if(req.body.pixels.length > 0) pixelsService.savePixels(req.body.pixels);
+  if(count > refresh) {
+    count = 0;
+    sendMemToBase(); // This may cause some clients to lose data, to compensate clients will load every minute or so.
+  }
 });
 
 app.get('/ping', (req, res) => {
