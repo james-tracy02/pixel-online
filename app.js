@@ -42,4 +42,4 @@ function addPixelsToMem(pixels) {
 }
 
 loadPixelsToMem();
-setInterval(loadPixelsToMem, 600000);
+//setInterval(loadPixelsToMem, 600000);
