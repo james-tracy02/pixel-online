@@ -11,6 +11,8 @@ app.use(cors());
 app.use(bodyParser.json({limit: '5mb'}));
 
 let memPixels = [];
+let count = 0;
+const refresh = 2000;
 
 app.get('/pixels', async (req, res) => {
   res.send(memPixels);
@@ -18,9 +20,10 @@ app.get('/pixels', async (req, res) => {
 
 app.post('/pixels', (req, res) => {
   res.send(memPixels);
+  count += req.body.pixels.length;
   addPixelsToMem(req.body.pixels);
-  if(req.body.pixels.length > 0)
-    pixelsService.savePixels(req.body.pixels);
+  if(req.body.pixels.length > 0) pixelsService.savePixels(req.body.pixels);
+  if(count > refresh) loadPixelsToMem();
 });
 
 app.get('/ping', (req, res) => {
@@ -41,5 +44,17 @@ function addPixelsToMem(pixels) {
   }
 }
 
+function getIndex(x, y) {
+  return x * 1080 + y;
+}
+
+function hexToRGB(hex) {
+  const decimal = parseInt(hex.substring(1), 10);
+  return {
+    r: decimal & 110000,
+    g: decimal & 001100,
+    b: decimal & 000011,
+  };
+}
+
 loadPixelsToMem();
-//setInterval(loadPixelsToMem, 600000);
