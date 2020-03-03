@@ -32,11 +32,11 @@ app.post('/pixels', (req, res) => {
 app.listen(port);
 
 function addPixelsToMem(pixels) {
-  console.log(Array.from(memPixels));
   let i;
   for(i = 0; i < pixels.length; i += 1) {
     const pixel = pixels[i];
     if(pixel.color === '#ffffff' || pixel.color === '#FFFFFF') {
+      memPixels.delete(`x${pixel.x}y${pixel.y}`);
     } else {
       memPixels.set(`x${pixel.x}y${pixel.y}`, pixel);
     }
