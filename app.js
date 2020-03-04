@@ -16,9 +16,9 @@ app.post('/pixels', (req, res) => {
   const response = {
     index: end,
     pixels: memPixels.slice(req.body.index, end),
-  }
-  res.send();
-
+  };
+  res.send(response);
+  if(req.body.pixels.length > 0) pixelsService.savePixels(req.body.pixels);
 });
 
 app.get('/ping', (req, res) => {
