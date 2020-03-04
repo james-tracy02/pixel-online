@@ -18,12 +18,20 @@ app.post('/pixels', (req, res) => {
     pixels: memPixels.slice(req.body.index, end),
   };
   res.send(response);
+  addPixelsToMem(req.body.pixels);
   if(req.body.pixels.length > 0) pixelsService.savePixels(req.body.pixels);
 });
 
 app.get('/ping', (req, res) => {
   res.send('ok');
 });
+
+function addPixelsToMem(pixels) {
+  let i;
+  for(let i = 0; i < pixels.length; i += 1) {
+    memPixels.push(pixels[i]);
+  }
+}
 
 async function loadPixels() {
   const pixels = await pixelsService.getAllPixels();
