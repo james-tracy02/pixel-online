@@ -43,7 +43,7 @@ async function loadPixels() {
 function persistPixels() {
   const i = persistedIndex;
   persistedIndex = memPixels.length;
-  pixelsService.savePixels(memPixels.slice(i));
+  if(i < memPixels.length) pixelsService.savePixels(memPixels.slice(i));
 }
 
 loadPixels();
