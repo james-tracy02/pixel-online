@@ -9,7 +9,9 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.json({limit: '5mb'}));
 
+const PERSISTANCE_FREQ = 60000;
 let memPixels;
+let persistedIndex = 0;
 
 app.post('/pixels', (req, res) => {
   const end = memPixels.length;
@@ -19,7 +21,6 @@ app.post('/pixels', (req, res) => {
   };
   res.send(response);
   addPixelsToMem(req.body.pixels);
-  if(req.body.pixels.length > 0) pixelsService.savePixels(req.body.pixels);
 });
 
 app.get('/ping', (req, res) => {
@@ -36,7 +37,15 @@ function addPixelsToMem(pixels) {
 async function loadPixels() {
   const pixels = await pixelsService.getAllPixels();
   memPixels = pixels;
+  persistedIndex = pixels.length;
+}
+
+function persistPixels() {
+  const i = persistedIndex;
+  persistedIndex = memPixels.length;
+  pixelsService.savePixels(memPixels.slice(i));
 }
 
 loadPixels();
+setInterval(persistPixels, PERSISTANCE_FREQ);
 app.listen(port);

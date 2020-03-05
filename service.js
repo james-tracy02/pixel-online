@@ -1,5 +1,6 @@
 
 require('./database.js');
+const mongoose = require('mongoose');
 const Pixel = require('./pixel.js');
 
 function getAllPixels() {
@@ -26,9 +27,9 @@ async function savePixels(pixels) {
       });
     }
   }
-
   Pixel.collection.bulkWrite(bulkOps);
 }
+
 
 module.exports = {
   getAllPixels,
