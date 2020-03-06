@@ -9,7 +9,7 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.json({limit: '5mb'}));
 
-const SAVE_FREQ = 1000 * 60 * 1;
+const SAVE_FREQ = 1000 * 60 * 20;
 let saveTimeout;
 let memPixels;
 
