@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/james-tracy02/pixel-online#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "canvas": "^2.6.1",
     "cloudinary": "^1.19.0",
