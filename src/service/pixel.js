@@ -1,8 +1,7 @@
 
 require('dotenv').config();
-const mongo = require('mongodb');
-const client = new mongo.MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-client.connect();
+require('../database.js');
+const canvasService = require('./canvas.js');
 
 const { createCanvas, Image } = require('canvas');
 const axios = require('axios');
@@ -12,18 +11,6 @@ const HEIGHT = 1080;
 const canvas = createCanvas(WIDTH, HEIGHT);
 const ctx = canvas.getContext('2d');
 const cloudinary = require('cloudinary').v2;
-
-async function loadUrl() {
-  const db = client.db('heroku_nxl1c47m');
-  const { url } = await db.collection('urls').findOne({ _id: mongo.ObjectId('5e61cae07c213e3443e8e010') });
-  return url;
-}
-
-async function writeUrl(url) {
-  console.log(url);
-  const db = client.db('heroku_nxl1c47m');
-  await db.collection('urls').updateOne({ _id: mongo.ObjectId('5e61cae07c213e3443e8e010') }, { $set: { url: url }});
-}
 
 function componentToHex(c) {
   var hex = c.toString(16);
@@ -64,8 +51,8 @@ function addPixelsToCanvas(pixels) {
 }
 
 async function fetchPixels() {
-  const url = await loadUrl();
-  return axios.get(url,
+  const canvas = await canvasService.getLatest();
+  return axios.get(canvas.url,
   { responseType: 'arraybuffer' })
   .then(response => {
     ctx.fillStyle = '#ffffff';
@@ -83,7 +70,7 @@ function savePixels(pixels) {
   { public_id: 'pixel_online_canvas' },
   (error, result) => {
     if(error) console.log(error);
-    writeUrl(result.url);
+    canvasService.save(result.url);
   });
 }
 

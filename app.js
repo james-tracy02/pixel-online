@@ -3,16 +3,15 @@ require("dotenv").config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const pixelsService = require('./pixelsService.js');
+const pixelsService = require('./src/service/pixel.js');
 const app = express();
 const port = process.env.PORT || 8080;
-app.use(cors());
-app.use(bodyParser.json({limit: '5mb'}));
-
 const SAVE_FREQ = 1000 * 60 * 20;
 let saveTimeout;
 let memPixels;
 
+app.use(cors());
+app.use(bodyParser.json({limit: '5mb'}));
 app.post('/pixels', (req, res) => {
   const end = memPixels.length;
   const response = {
@@ -25,7 +24,6 @@ app.post('/pixels', (req, res) => {
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(savePixels, SAVE_FREQ);
 });
-
 app.get('/ping', (req, res) => {
   res.send('ok');
 });
