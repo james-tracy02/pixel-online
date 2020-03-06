@@ -3,15 +3,15 @@ require("dotenv").config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const pixelsService = require('./service.js');
+const pixelsService = require('./pixelsService.js');
 const app = express();
 const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.json({limit: '5mb'}));
 
-const PERSISTANCE_FREQ = 60000;
+const SAVE_FREQ = 1000 * 60 * 1;
+let saveTimeout;
 let memPixels;
-let persistedIndex = 0;
 
 app.post('/pixels', (req, res) => {
   const end = memPixels.length;
@@ -21,6 +21,9 @@ app.post('/pixels', (req, res) => {
   };
   res.send(response);
   addPixelsToMem(req.body.pixels);
+
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(savePixels, SAVE_FREQ);
 });
 
 app.get('/ping', (req, res) => {
@@ -34,18 +37,17 @@ function addPixelsToMem(pixels) {
   }
 }
 
-async function loadPixels() {
-  const pixels = await pixelsService.getAllPixels();
-  memPixels = pixels;
-  persistedIndex = pixels.length;
+function loadPixels() {
+  return pixelsService.fetchPixels()
+  .then((pixels) => memPixels = pixels);
 }
 
-function persistPixels() {
-  const i = persistedIndex;
-  persistedIndex = memPixels.length;
-  if(i < memPixels.length) pixelsService.savePixels(memPixels.slice(i));
+function savePixels() {
+  pixelsService.savePixels(memPixels);
 }
 
-loadPixels();
-setInterval(persistPixels, PERSISTANCE_FREQ);
-app.listen(port);
+loadPixels()
+.then(() => {
+  saveTimeout = setTimeout(savePixels, SAVE_FREQ);
+  app.listen(port);
+});
