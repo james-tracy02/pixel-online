@@ -7,11 +7,18 @@ const pixelsService = require('./src/service/pixel.js');
 const app = express();
 const port = process.env.PORT || 8080;
 const SAVE_FREQ = 1000 * 60 * 20;
+
 let saveTimeout;
-let memPixels;
+const memPixels = [];
+let memImage;
 
 app.use(cors());
 app.use(bodyParser.json({limit: '5mb'}));
+
+app.get('/pixels', (req, res) => {
+  res.send(memImage);
+});
+
 app.post('/pixels', (req, res) => {
   const end = memPixels.length;
   const response = {
@@ -19,32 +26,22 @@ app.post('/pixels', (req, res) => {
     pixels: memPixels.slice(req.body.index, end),
   };
   res.send(response);
-  addPixelsToMem(req.body.pixels);
 
+  Array.prototype.push.apply(memPixels, req.body.pixels);
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(savePixels, SAVE_FREQ);
 });
-app.get('/ping', (req, res) => {
-  res.send('ok');
-});
 
-function addPixelsToMem(pixels) {
-  let i;
-  for(let i = 0; i < pixels.length; i += 1) {
-    memPixels.push(pixels[i]);
-  }
-}
-
-function loadPixels() {
-  return pixelsService.fetchPixels()
-  .then((pixels) => memPixels = pixels);
+function loadImage() {
+  return pixelsService.fetchImage()
+  .then((image) => memImage = image);
 }
 
 function savePixels() {
   pixelsService.savePixels(memPixels);
 }
 
-loadPixels()
+loadImage()
 .then(() => {
   saveTimeout = setTimeout(savePixels, SAVE_FREQ);
   app.listen(port);

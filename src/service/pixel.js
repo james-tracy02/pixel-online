@@ -23,6 +23,11 @@ function rgbToHex(rgb, index) {
 
 function convertToPixels(imgData) {
   const pixels = [];
+  let i;
+  for(i = 0; i < imgData.length; i += 1) {
+    pixels.push(i)
+  }
+  /*
   let y;
   for(y = 0; y < HEIGHT; y += 1) {
     let x;
@@ -38,6 +43,7 @@ function convertToPixels(imgData) {
       pixels.push(pixel);
     }
   }
+  */
   return pixels;
 }
 
@@ -50,17 +56,15 @@ function addPixelsToCanvas(pixels) {
   }
 }
 
-async function fetchPixels() {
-  const canvas = await canvasService.getLatest();
-  return axios.get(canvas.url,
+async function fetchImage() {
+  const canvasData = await canvasService.getLatest();
+  return axios.get(canvasData.url,
   { responseType: 'arraybuffer' })
   .then(response => {
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
     const image = new Image();
     image.src = response.data;
     ctx.drawImage(image, 0, 0);
-    return convertToPixels(ctx.getImageData(0, 0, WIDTH, HEIGHT).data);
+    return canvas.toDataURL('image/png');
   });
 }
 
@@ -75,6 +79,6 @@ function savePixels(pixels) {
 }
 
 module.exports = {
-  fetchPixels,
+  fetchImage,
   savePixels,
 };
