@@ -1,6 +1,4 @@
-
 require('dotenv').config();
-require('../database.js');
 const canvasService = require('./canvas.js');
 
 const { createCanvas, Image } = require('canvas');

@@ -1,10 +1,4 @@
+const { Sequelize } = require("sequelize");
+const sequelize = new Sequelize(process.env.JAWSDB_URL);
 
-const mongoose = require('mongoose');
-
-const uri = process.env.MONGODB_URI;
-
-function connect() {
-  mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
-}
-
-module.exports = connect();
+module.exports = sequelize;
